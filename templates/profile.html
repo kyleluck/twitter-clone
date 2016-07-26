@@ -10,6 +10,10 @@
     <div class="col col-xs-4">
       <h1>@{{ user_info.username }}</h1>
       <p>{{ user_info.bio }}</p>
+      {% if user_info.website %}
+      <a href="{{ user_info.website }}" target="_blank">{{ user_info.website }}</a>
+      {% endif %}
+      <p>Joined on {{ user_info.joined_display }}</p>
       <div class="row">
         <div class="col col-xs-4">
           Followers: {{ user_info.followers }}

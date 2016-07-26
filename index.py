@@ -8,6 +8,7 @@ app = Flask('twitter-app')
 
 @app.route('/')
 def show_public():
+    #print "generated password is %r" % generate_password_hash('test3456')
     if 'user' in session:
         tweets = db.query('''
             select
@@ -38,7 +39,14 @@ def profile():
     if request.args.get('username'):
         username = request.args.get('username')
         # get user information from db
-        user_info = db.query('select * from user_table where username = $1', username).namedresult()
+        user_info = db.query('''
+            select
+                *,
+                to_char(joined, 'Month YYYY') as joined_display
+            from
+                user_table
+            where
+                username = $1''', username).namedresult()
         user_id = user_info[0].id
         user_tweets = db.query('''
             select
