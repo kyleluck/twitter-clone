@@ -29,8 +29,9 @@ def process_login():
         if check_password:
             session['user'] = username
             return redirect('/')
-        else:
-            return redirect('/login')
+    
+    return render_template('login.html',
+        errormessage = True)
 
 @app.route('/signup')
 def signup():
@@ -58,4 +59,6 @@ def timeline():
 app.secret_key = 'CSF686CCF85C6FRTCHQDBJDXHBHC1G478C86GCFTDCR'
 
 if __name__ == '__main__':
+    # debugging
+    app.debug = True
     app.run(debug=True)
