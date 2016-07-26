@@ -22,7 +22,7 @@ def process_login():
     password = request.form['password']
 
     # find user by username
-    user = db.query("select username, password from user_table where username = '%s'" % username)
+    user = db.query("select username, password from user_table where username = $1", username)
     if len(user.namedresult()) >= 1:
         # check that password matches. if so, redirect to home page otherwise redirect to login
         check_password = check_password_hash(user.namedresult()[0].password, password)
