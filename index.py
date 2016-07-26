@@ -8,9 +8,30 @@ app = Flask('twitter-app')
 
 @app.route('/')
 def show_public():
-    tweets = db.query("select * from tweet").namedresult()
-    return render_template('public.html',
-       tweets = tweets)
+    if 'user' in session:
+        tweets = db.query('''
+            select
+                tweet.content,
+                tweet.image,
+                tweet.category,
+                tweet.created_at,
+                user_table.username,
+                user_table.userfull,
+                user_table.avatar,
+                (case when (now() - tweet.created_at > '59 minutes'::interval)
+                	then to_char(tweet.created_at, 'Month DD')
+                	else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
+                	end) as time_display
+            from
+                tweet
+            inner join
+                user_table on tweet.user_id = user_table.id
+            order by
+                tweet.created_at desc''').namedresult()
+        return render_template('public.html',
+           tweets = tweets)
+    else:
+        return redirect('/login')
 
 @app.route('/login')
 def login():
@@ -29,7 +50,7 @@ def process_login():
         if check_password:
             session['user'] = username
             return redirect('/')
-    
+
     return render_template('login.html',
         errormessage = True)
 
