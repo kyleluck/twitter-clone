@@ -1,3 +1,30 @@
 {% extends 'layout.html' %}
 {% block body %}
+<div class="row">
+  <div class="col col-xs-10 col-xs-offset-1 col-md-8 col-md-offset-2">
+    <form method="POST" action="/processsignup" class="processsignup">
+      <div class="form-group">
+        <label for="username">Enter your username:</label>
+        <input type="text" name="username" placeholder="Username" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="userfull">Enter your full name:</label>
+        <input type="text" name="userfull" placeholder="Enter your full name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="password">Enter your password:</label>
+        <input type="password" name="password" placeholder="Enter your password" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="bio">Tell us a little about yourself:</label>
+        <input type="text" name="bio" placeholder="Enter your bio" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="website">Enter your website:</label>
+        <input type="text" name="website" placeholder="Enter your website" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-default">Register</button>
+    </form>
+  </div>
+</div>
 {% endblock %}
