@@ -33,6 +33,30 @@ def show_public():
     else:
         return redirect('/login')
 
+@app.route('/profile', methods=['GET'])
+def profile():
+    if request.args.get('username'):
+        username = request.args.get('username')
+        # get user information from db
+        user_info = db.query('select * from user_table where username = $1', username).namedresult()
+        user_id = user_info[0].id
+        user_tweets = db.query('''
+            select
+                *,
+                (case when (now() - tweet.created_at > '59 minutes'::interval)
+                    then to_char(tweet.created_at, 'Month DD')
+                    else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
+                    end) as time_display
+            from
+                tweet
+            where
+                user_id = $1''', user_id).namedresult()
+        return render_template('profile.html',
+            user_info = user_info[0],
+            user_tweets = user_tweets)
+    else:
+        return redirect('/404')
+
 @app.route('/login')
 def login():
     return render_template('login.html')

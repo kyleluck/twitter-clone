@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<div class="container-fluid header">
+  <h1>@{{ user_info.username }}</h1>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col col-xs-4">
+      <h1>@{{ user_info.username }}</h1>
+      <p>{{ user_info.bio }}</p>
+      <div class="row">
+        <div class="col col-xs-4">
+          Followers: {{ user_info.followers }}
+        </div>
+        <div class="col col-xs-4">
+          Following: {{ user_info.following }}
+        </div>
+        <div class="col col-xs-4">
+          Tweets: {{ user_info.tweets }}
+        </div>
+      </div>
+      <a href="/follow?username={{ user_info.username }}" class="btn btn-primary">Follow @{{ user_info.username }}</a>
+    </div>
+    <div class="col col-xs-8">
+      <!-- User's Tweets -->
+      {% for tweet in user_tweets %}
+      <div class="well">
+        <div class="avatar">
+          <img alt="@{{ user_info.username }}" class="avatar" height="20" src="{{ user_info.avatar }}" width="20">
+        </div>
+        <div class="userinfo">
+          {{ user_info.userfull }}
+          @{{ user_info.username }}
+        </div>
+        <div class="tweetcontent">
+          {{ tweet.content }}
+        </div>
+        <div class="time-display">
+          {{ tweet.time_display }}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
