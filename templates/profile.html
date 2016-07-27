@@ -24,13 +24,25 @@
       </div>
       <div class="row">
         <div class="col col-xs-4 text-center">
-          {{ user_following.followers }}
+          {% if user_following %}
+            {{ user_following.followers }}
+          {% else %}
+            0
+          {% endif %}
         </div>
         <div class="col col-xs-4 text-center">
-          {{ user_following.follows }}
+          {% if user_following %}
+            {{ user_following.follows }}
+          {% else %}
+            0
+          {% endif %}
         </div>
         <div class="col col-xs-4 text-center">
-          {{ num_tweets.num }}
+          {% if num_tweets %}
+            {{ num_tweets.num }}
+          {% else %}
+            0
+          {% endif %}
         </div>
       </div>
       <div class="row">
