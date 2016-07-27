@@ -47,7 +47,8 @@
       </div>
       <div class="row">
         <div class="col col-xs-12">
-          <a href="/follow?username={{ user_info.username }}" class="btn btn-primary follow-button">Follow @{{ user_info.username }}</a>
+          <!-- disable follow button if user is already following this user -->
+          <a href="/follow?userid={{ user_info.id }}&current_profile={{ user_info.username }}" class="btn btn-primary follow-button" {% if user_is_following %}disabled="true"{% endif %}>Follow @{{ user_info.username }}</a>
         </div>
       </div>
     </div>

@@ -39,6 +39,7 @@ def show_public():
 def profile():
     if request.args.get('username'):
         username = request.args.get('username')
+
         # get user information from db
         user_info = db.query('''
             select
@@ -58,6 +59,7 @@ def profile():
 
         user_id = user_info[0].id
 
+        # get followers and following stats
         user_following = db.query('''
             select
         	  follows, followers
@@ -83,6 +85,7 @@ def profile():
         		  follower.user_id) as followers_query on user_id = followed_by;
                 ''', user_id, user_id).namedresult()
 
+        # get current tweets for this profile user
         user_tweets = db.query('''
             select
                 *,
@@ -95,6 +98,7 @@ def profile():
             where
                 user_id = $1''', user_id).namedresult()
 
+        # get number of tweets for this profile user
         num_tweets = db.query('select count(id) as num from tweet where user_id = $1', user_id).namedresult()
 
         if len(user_following) >= 1:
@@ -102,12 +106,21 @@ def profile():
         else:
             following = None
 
+        # does the logged in user currently follow this profile user?
+        currently_following = db.query("select count(id) from follower where user_id = %d and followed_by = %d" % (user_id, session['id'])).namedresult()
+
+        if currently_following[0].count > 0:
+            user_is_following = True
+        else:
+            user_is_following = False
+
         return render_template('profile.html',
             title = "@%s" % user_info[0].username,
             user_info = user_info[0],
             user_following = following,
             user_tweets = user_tweets,
-            num_tweets = num_tweets[0])
+            num_tweets = num_tweets[0],
+            user_is_following = user_is_following)
     else:
         return redirect('/404')
 
@@ -140,9 +153,19 @@ def timeline():
             time_display asc
         ''', user_id).namedresult()
     return render_template('timeline.html',
-        title = "@%s's Timeline" % timeline_query[0].username,
+        title = "Your Timeline",
         tweets = timeline_query)
 
+@app.route('/follow', methods=['GET'])
+def follow():
+    user_to_follow = request.args.get('userid')
+    current_profile = request.args.get('current_profile')
+    current_user_id = session['id']
+
+    # insert into follower table
+    db.insert('follower', user_id=user_to_follow, followed_by=current_user_id)
+
+    return redirect('/profile?username=%s' % current_profile)
 
 @app.route('/login')
 def login():
@@ -167,6 +190,7 @@ def process_login():
     return render_template('login.html',
         errormessage = True,
         title = "Login")
+
 
 @app.route('/signup')
 def signup():
