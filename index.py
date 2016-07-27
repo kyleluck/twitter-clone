@@ -167,6 +167,16 @@ def follow():
 
     return redirect('/profile?username=%s' % current_profile)
 
+@app.route('/tweet', methods=['POST'])
+def tweet():
+    tweet = request.form['tweet']
+    user_id = session['id']
+
+    #insert tweet
+    db.insert('tweet', content=tweet, user_id=user_id)
+
+    return redirect('/timeline')
+
 @app.route('/login')
 def login():
     return render_template('login.html', title = "Login")

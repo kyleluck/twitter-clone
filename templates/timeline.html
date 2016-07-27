@@ -4,6 +4,18 @@
 <div class="container">
   <div class="row">
     <div class="col col-xs-12 col-sm-8 col-sm-offset-2">
+      <!-- First, an area to tweet -->
+      <div class="tweetthis">
+        <div class="well">
+          <form action="/tweet" method="POST">
+            <div class="form-group">
+              <label for="tweet">What's happening?</label>
+              <textarea class="form-control" rows="5" id="tweet" name="tweet" maxlength="140"></textarea>
+            </div>
+            <button type="submit" name="button" class="btn btn-primary">Tweet!</button>
+          </form>
+        </div>
+      </div>
       {% for tweet in tweets %}
       <div class="well">
         <div class="avatar">

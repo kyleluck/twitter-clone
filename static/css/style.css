@@ -82,3 +82,7 @@ nav.navbar.shrink {
 .tweetpic {
   max-width: 100%;
 }
+
+.tweetinput {
+  padding: 10px;
+}
