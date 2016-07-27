@@ -54,7 +54,7 @@ def profile():
             from
                 user_table
             where
-                username = $1
+                username ilike $1
             ''', username).namedresult()
 
         if len(user_info) > 0:
@@ -143,7 +143,7 @@ def timeline():
             (case when (now() - tweet.created_at > '59 minutes'::interval)
                 then to_char(tweet.created_at, 'Month DD')
                 else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
-                end) as time_display,
+                end) as time_display
         from
             tweet
         full outer join
