@@ -78,3 +78,7 @@ nav.navbar.shrink {
   background-color:rgba(3, 169, 244, 0.7);
   color: white;
 }
+
+.tweetpic {
+  max-width: 100%;
+}

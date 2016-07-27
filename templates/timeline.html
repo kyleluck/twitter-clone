@@ -18,6 +18,9 @@
         </div>
         <div class="tweetcontent">
           <p class="lead">{{ tweet.content }}</p>
+          {% if tweet.image %}
+          <img src="{{ tweet.image }}" class="tweetpic" alt="tweetpic"/>
+          {% endif %}
         </div>
       </div>
       {% endfor %}
