@@ -49,5 +49,15 @@ nav.navbar.shrink {
 
 .bold {
   font-weight: 700;
+  color: black;
   vertical-align: top;
+}
+
+.greyed {
+  color: grey;
+  vertical-align: top;
+}
+
+.userinfo a {
+  text-decoration: none;
 }

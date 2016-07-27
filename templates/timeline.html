@@ -15,9 +15,11 @@
           <img alt="@{{ tweet.username }}" class="avatar" src="{{ tweet.avatar }}">
         </div>
         <div class="userinfo">
-          <span class="bold">{{ tweet.userfull }}</span>
-          @{{ tweet.username }}
-          {{ tweet.time_display }}
+          <a href="/profile?username={{ tweet.username}}">
+            <span class="bold">{{ tweet.userfull }}</span>
+            <span class="greyed">@{{ tweet.username }}</span>
+          </a>
+          <span class="greyed">{{ tweet.time_display }}</span>
         </div>
         <div class="tweetcontent">
           <p class="lead">{{ tweet.content }}</p>
