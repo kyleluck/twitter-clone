@@ -35,10 +35,9 @@ def show_public():
     else:
         return redirect('/login')
 
-@app.route('/profile', methods=['GET'])
-def profile():
-    if request.args.get('username'):
-        username = request.args.get('username')
+@app.route('/profile/<username>')
+def profile(username):
+    if username:
 
         # get user information from db
         user_info = db.query('''
@@ -120,7 +119,7 @@ def profile():
             user_is_following = False
 
         return render_template('profile.html',
-            title = "@%s" % user_info[0].username,
+            title = "@%s" % username,
             user_info = user_info[0],
             user_following = following,
             user_tweets = user_tweets,
@@ -171,7 +170,7 @@ def follow():
     # insert into follower table
     db.insert('follower', user_id=user_to_follow, followed_by=current_user_id)
 
-    return redirect('/profile?username=%s' % current_profile)
+    return redirect('/profile/%s' % current_profile)
 
 @app.route('/tweet', methods=['POST'])
 def tweet():
