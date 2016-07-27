@@ -104,9 +104,43 @@ def profile():
     else:
         return redirect('/404')
 
+@app.route('/timeline')
+def timeline():
+    user_id = session['id']
+    timeline_query = db.query('''
+        select
+            tweet.content,
+            tweet.image,
+            tweet.category,
+            tweet.created_at,
+            user_table.username,
+            user_table.userfull,
+            user_table.avatar,
+            (case when (now() - tweet.created_at > '59 minutes'::interval)
+                then to_char(tweet.created_at, 'Month DD')
+                else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
+                end) as time_display
+        from
+            tweet
+        full outer join
+            user_table on tweet.user_id = user_table.id
+        where
+            tweet.user_id = $1 or
+            tweet.user_id in (
+                select user_id from follower where followed_by = $1
+            )
+        order by
+            time_display asc
+        ''', user_id).namedresult()
+    return render_template('timeline.html',
+        title = 'Timeline',
+        tweets = timeline_query)
+
+
 @app.route('/login')
 def login():
     return render_template('login.html')
+
 
 @app.route('/processlogin', methods=['POST'])
 def process_login():
@@ -114,12 +148,13 @@ def process_login():
     password = request.form['password']
 
     # find user by username
-    user = db.query("select username, password from user_table where username = $1", username)
+    user = db.query("select id, username, password from user_table where username = $1", username)
     if len(user.namedresult()) >= 1:
         # check that password matches. if so, redirect to home page otherwise redirect to login
         check_password = check_password_hash(user.namedresult()[0].password, password)
         if check_password:
             session['user'] = username
+            session['id'] = user.namedresult()[0].id
             return redirect('/')
 
     return render_template('login.html',
@@ -143,9 +178,6 @@ def process_signup():
 
     return redirect('/login')
 
-@app.route('/timeline')
-def timeline():
-    return 'timeline page'
 
 # Secret key for session
 app.secret_key = 'CSF686CCF85C6FRTCHQDBJDXHBHC1G478C86GCFTDCR'

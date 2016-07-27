@@ -2,21 +2,24 @@ body {
   background: #f5f8fa;
   padding-top: 125px;
 }
+
 .header {
   background: #1DA1F2;
   text-align: center;
   color: white;
   height: 200px;
 }
+
 .well {
   background-color: #fff;
 }
+
 .follow-button {
   margin: 15px 0;
 }
+
 nav.navbar{
   background-color:#1DA1F2;
-  /*height: 100px;*/
   min-height: 100px;
   color: white;
   -webkit-transition: all 0.4s ease;
