@@ -20,14 +20,14 @@ body {
 
 nav.navbar{
   background-color:#1DA1F2;
-  min-height: 100px;
+  min-height: 120px;
   color: white;
   -webkit-transition: all 0.4s ease;
   transition: all 0.4s ease;
 }
 
 nav.navbar.shrink {
-  min-height: 35px;
+  min-height: 55px;
 }
 
 .avatar {
@@ -60,4 +60,21 @@ nav.navbar.shrink {
 
 .userinfo a {
   text-decoration: none;
+}
+
+.title {
+  display: inline;
+}
+
+.nav-pills {
+  float: right;
+}
+
+.navbar .container {
+  padding-top: 5px;
+}
+
+.navbutton {
+  background-color:rgba(3, 169, 244, 0.7);
+  color: white;
 }
