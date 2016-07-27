@@ -97,7 +97,7 @@ def profile():
 
         num_tweets = db.query('select count(id) as num from tweet where user_id = $1', user_id).namedresult()
         return render_template('profile.html',
-            title = "Profile View",
+            title = "@%s" % user_info[0].username,
             user_info = user_info[0],
             user_following = user_following[0],
             user_tweets = user_tweets,
