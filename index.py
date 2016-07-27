@@ -182,9 +182,8 @@ def tweet():
 
     return redirect('/timeline')
 
-@app.route('/like', methods=['GET'])
-def like():
-    tweet_id = request.args.get('tweet_id')
+@app.route('/like/<tweet_id>')
+def like(tweet_id):
     user_id = session['id']
 
     db.insert('like', user_id=user_id, tweet_id=tweet_id)
