@@ -86,3 +86,12 @@ nav.navbar.shrink {
 .tweetinput {
   padding: 10px;
 }
+
+.like {
+  color: #AAB8C2;
+  font-size: 1.5em;
+}
+
+.like:hover {
+  color: red;
+}

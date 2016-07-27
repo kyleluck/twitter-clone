@@ -57,7 +57,10 @@ def profile():
                 username = $1
             ''', username).namedresult()
 
-        user_id = user_info[0].id
+        if len(user_info) > 0:
+            user_id = user_info[0].id
+        else:
+            return redirect('/404')
 
         # get followers and following stats
         user_following = db.query('''
@@ -129,6 +132,7 @@ def timeline():
     user_id = session['id']
     timeline_query = db.query('''
         select
+            tweet.id,
             tweet.content,
             tweet.image,
             tweet.category,
@@ -139,7 +143,7 @@ def timeline():
             (case when (now() - tweet.created_at > '59 minutes'::interval)
                 then to_char(tweet.created_at, 'Month DD')
                 else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
-                end) as time_display
+                end) as time_display,
         from
             tweet
         full outer join
@@ -176,6 +180,16 @@ def tweet():
     db.insert('tweet', content=tweet, user_id=user_id)
 
     return redirect('/timeline')
+
+@app.route('/like', methods=['GET'])
+def like():
+    tweet_id = request.args.get('tweet_id')
+    user_id = session['id']
+
+    db.insert('like', user_id=user_id, tweet_id=tweet_id)
+
+    return redirect('/timeline');
+
 
 @app.route('/login')
 def login():
@@ -226,6 +240,12 @@ def logout():
         del session['user']
         del session['id']
     return redirect('/login')
+
+# simple error page
+@app.route('/404')
+def not_found():
+    return render_template('404.html', title="404")
+
 
 # Secret key for session
 app.secret_key = 'CSF686CCF85C6FRTCHQDBJDXHBHC1G478C86GCFTDCR'

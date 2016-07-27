@@ -34,6 +34,9 @@
           <img src="{{ tweet.image }}" class="tweetpic" alt="tweetpic"/>
           {% endif %}
         </div>
+        <div class="actions">
+          <a href="/like?tweet_id={{ tweet.id }}"><span class="glyphicon glyphicon-heart like" aria-hidden="true"></span></a>
+        </div>
       </div>
       {% endfor %}
     </div>
