@@ -134,13 +134,13 @@ def timeline():
             time_display asc
         ''', user_id).namedresult()
     return render_template('timeline.html',
-        title = 'Timeline',
+        title = "@%s's Timeline" % timeline_query[0].username,
         tweets = timeline_query)
 
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    return render_template('login.html', title = "Login")
 
 
 @app.route('/processlogin', methods=['POST'])
@@ -159,11 +159,12 @@ def process_login():
             return redirect('/')
 
     return render_template('login.html',
-        errormessage = True)
+        errormessage = True,
+        title = "Login")
 
 @app.route('/signup')
 def signup():
-    return render_template('signup.html')
+    return render_template('signup.html', title = "Register")
 
 @app.route('/processsignup', methods=['POST'])
 def process_signup():
@@ -179,7 +180,13 @@ def process_signup():
 
     return redirect('/login')
 
-
+@app.route('/logout')
+def logout():
+    if session['user']:
+        del session['user']
+        del session['id']
+    return redirect('/login')
+    
 # Secret key for session
 app.secret_key = 'CSF686CCF85C6FRTCHQDBJDXHBHC1G478C86GCFTDCR'
 
