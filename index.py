@@ -12,6 +12,7 @@ def show_public():
     if 'user' in session:
         tweets = db.query('''
             select
+                tweet.id,
                 tweet.content,
                 tweet.image,
                 tweet.category,
@@ -197,7 +198,8 @@ def like(tweet_id):
 
     db.insert('likes', user_id=user_id, tweet_id=tweet_id)
 
-    return redirect('/timeline');
+    # redirect to the referrer
+    return redirect(request.referrer);
 
 
 @app.route('/login')
