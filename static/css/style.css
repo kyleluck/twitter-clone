@@ -87,11 +87,11 @@ nav.navbar.shrink {
   padding: 10px;
 }
 
-.like {
+.action {
   color: #AAB8C2;
   font-size: 1.5em;
 }
 
-.like:hover {
+.action:hover {
   color: red;
 }

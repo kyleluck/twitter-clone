@@ -35,7 +35,8 @@
           {% endif %}
         </div>
         <div class="actions">
-          <a href="/like?tweet_id={{ tweet.id }}"><span class="glyphicon glyphicon-heart like" aria-hidden="true"></span></a>
+          <a href="/like?tweet_id={{ tweet.id }}"><span class="glyphicon glyphicon-heart action" aria-hidden="true"></span></a>
+          <a href="/retweet/{{ tweet.id }}"><span class="glyphicon glyphicon-retweet action" aria-hidden="true"></span></a>
         </div>
       </div>
       {% endfor %}
