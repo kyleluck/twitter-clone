@@ -12,9 +12,12 @@
         <h1 class="title">{{ title }}</h1>
         <ul class="nav nav-pills">
           <li role="presentation"><a href="/" class="btn btn-default btn-lg navbutton">Home</a></li>
-          <li role="presentation"><a href="/timeline" class="btn btn-default btn-lg navbutton">Timeline</a></li>
           {% if session['user'] %}
+          <li role="presentation"><a href="/timeline" class="btn btn-default btn-lg navbutton">Timeline</a></li>
           <li role="presentation"><a href="/logout" class="btn btn-default btn-lg navbutton">Logout</a></li>
+          {% else %}
+          <li role="presentation"><a href="/login" class="btn btn-default btn-lg navbutton">Login</a></li>
+          <li role="presentation"><a href="/signup" class="btn btn-default btn-lg navbutton">Signup</a></li>
           {% endif %}
         </ul>
       </div>

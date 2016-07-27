@@ -96,10 +96,16 @@ def profile():
                 user_id = $1''', user_id).namedresult()
 
         num_tweets = db.query('select count(id) as num from tweet where user_id = $1', user_id).namedresult()
+
+        if len(user_following) >= 1:
+            following = user_following[0]
+        else:
+            following = None
+
         return render_template('profile.html',
             title = "@%s" % user_info[0].username,
             user_info = user_info[0],
-            user_following = user_following[0],
+            user_following = following,
             user_tweets = user_tweets,
             num_tweets = num_tweets[0])
     else:
@@ -186,7 +192,7 @@ def logout():
         del session['user']
         del session['id']
     return redirect('/login')
-    
+
 # Secret key for session
 app.secret_key = 'CSF686CCF85C6FRTCHQDBJDXHBHC1G478C86GCFTDCR'
 
