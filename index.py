@@ -144,7 +144,10 @@ def timeline():
             (case when (now() - tweet.created_at > '59 minutes'::interval)
                 then to_char(tweet.created_at, 'Month DD')
                 else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
-                end) as time_display
+                end) as time_display,
+            (case when exists
+                (select * from likes where tweet_id = tweet.id)
+                then true else false end) as liked
         from
             tweet
         full outer join
@@ -186,7 +189,7 @@ def tweet():
 def like(tweet_id):
     user_id = session['id']
 
-    db.insert('like', user_id=user_id, tweet_id=tweet_id)
+    db.insert('likes', user_id=user_id, tweet_id=tweet_id)
 
     return redirect('/timeline');
 

@@ -90,8 +90,14 @@ nav.navbar.shrink {
 .action {
   color: #AAB8C2;
   font-size: 1.5em;
+  margin-right: 15px;
+  margin-top: 10px;
 }
 
 .action:hover {
+  color: red;
+}
+
+.liked {
   color: red;
 }
