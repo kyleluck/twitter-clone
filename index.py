@@ -41,13 +41,47 @@ def profile():
         # get user information from db
         user_info = db.query('''
             select
-                *,
+                user_table.id,
+                user_table.bio,
+                user_table.username,
+                user_table.userfull,
+                user_table.website,
+                user_table.avatar,
+                user_table.joined,
                 to_char(joined, 'Month YYYY') as joined_display
             from
                 user_table
             where
-                username = $1''', username).namedresult()
+                username = $1
+            ''', username).namedresult()
+
         user_id = user_info[0].id
+
+        user_following = db.query('''
+            select
+        	  follows, followers
+        	from (
+        		select
+        			count(followed_by) as followers,
+        			followed_by
+        		from
+        		  follower
+        		where
+        		  followed_by = $1
+        		group by
+        		  followed_by) as follows_query
+        		full outer join
+        		  (select
+        			count(user_id) as follows,
+        			user_id
+        		from
+        		  follower
+        		where
+        		  user_id = $2
+        		group by
+        		  follower.user_id) as followers_query on user_id = followed_by;
+                ''', user_id, user_id).namedresult()
+
         user_tweets = db.query('''
             select
                 *,
@@ -59,9 +93,14 @@ def profile():
                 tweet
             where
                 user_id = $1''', user_id).namedresult()
+
+        num_tweets = db.query('select count(id) as num from tweet where user_id = $1', user_id).namedresult()
         return render_template('profile.html',
+            title = "Profile View",
             user_info = user_info[0],
-            user_tweets = user_tweets)
+            user_following = user_following[0],
+            user_tweets = user_tweets,
+            num_tweets = num_tweets[0])
     else:
         return redirect('/404')
 

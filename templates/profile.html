@@ -7,7 +7,8 @@
 
 <div class="container">
   <div class="row">
-    <div class="col col-xs-4">
+    <div class="col col-xs-12 col-sm-4">
+      <img src="{{ user_info.avatar }}" class="img-thumbnail">
       <h1>@{{ user_info.username }}</h1>
       <p>{{ user_info.bio }}</p>
       {% if user_info.website %}
@@ -15,19 +16,34 @@
       {% endif %}
       <p>Joined on {{ user_info.joined_display }}</p>
       <div class="row">
-        <div class="col col-xs-4">
-          Followers: {{ user_info.followers }}
+        <div class="col col-xs-4 text-center">
+          Followers
         </div>
-        <div class="col col-xs-4">
-          Following: {{ user_info.following }}
+        <div class="col col-xs-4 text-center">
+          Following
         </div>
-        <div class="col col-xs-4">
-          Tweets: {{ user_info.tweets }}
+        <div class="col col-xs-4 text-center">
+          Tweets
         </div>
       </div>
-      <a href="/follow?username={{ user_info.username }}" class="btn btn-primary">Follow @{{ user_info.username }}</a>
+      <div class="row">
+        <div class="col col-xs-4 text-center">
+          {{ user_following.followers }}
+        </div>
+        <div class="col col-xs-4 text-center">
+          {{ user_following.follows }}
+        </div>
+        <div class="col col-xs-4 text-center">
+          {{ num_tweets.num }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col col-xs-12">
+          <a href="/follow?username={{ user_info.username }}" class="btn btn-primary follow-button">Follow @{{ user_info.username }}</a>
+        </div>
+      </div>
     </div>
-    <div class="col col-xs-8">
+    <div class="col col-xs-12 col-sm-8">
       <!-- User's Tweets -->
       {% for tweet in user_tweets %}
       <div class="well">
