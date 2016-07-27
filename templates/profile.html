@@ -1,9 +1,15 @@
 {% extends 'layout.html' %}
 {% block body %}
 
-<div class="container-fluid header">
+<!-- <div class="container-fluid header">
   <h1>@{{ user_info.username }}</h1>
-</div>
+</div> -->
+
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <h1>@{{ user_info.username }}</h1>
+  </div>
+</nav>
 
 <div class="container">
   <div class="row">
