@@ -29,7 +29,7 @@ def show_public():
                 user_table on tweet.user_id = user_table.id
             order by
                 tweet.created_at desc''').namedresult()
-        return render_template('timeline.html',
+        return render_template('public.html',
             title = "What's Happening",
             tweets = tweets)
     else:
