@@ -54,17 +54,15 @@
       {% for tweet in user_tweets %}
       <div class="well">
         <div class="avatar">
-          <img alt="@{{ user_info.username }}" class="avatar" height="20" src="{{ user_info.avatar }}" width="20">
+          <img alt="@{{ user_info.username }}" class="avatar" src="{{ user_info.avatar }}">
         </div>
         <div class="userinfo">
-          {{ user_info.userfull }}
+          <span class="bold">{{ user_info.userfull }}</span>
           @{{ user_info.username }}
+          {{ tweet.time_display }}
         </div>
         <div class="tweetcontent">
-          {{ tweet.content }}
-        </div>
-        <div class="time-display">
-          {{ tweet.time_display }}
+          <p class="lead">{{ tweet.content }}</p>
         </div>
       </div>
       {% endfor %}

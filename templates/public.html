@@ -3,7 +3,7 @@
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
-    <h1>What's Happening</h1>
+    <h1>{{title}}</h1>
   </div>
 </nav>
 <div class="container">
@@ -12,17 +12,15 @@
       {% for tweet in tweets %}
         <div class="well">
           <div class="avatar">
-            <img alt="@kyleluck" class="avatar" height="20" src="{{ tweet.avatar }}" width="20">
+            <img alt="@{{ tweet.username }}" class="avatar" src="{{ tweet.avatar }}">
           </div>
           <div class="userinfo">
-            {{ tweet.userfull }}
+            <span class="bold">{{ tweet.userfull }}</span>
             @{{ tweet.username }}
+            {{ tweet.time_display }}
           </div>
           <div class="tweetcontent">
-            {{ tweet.content }}
-          </div>
-          <div class="time-display">
-            {{ tweet.time_display }}
+            <p class="lead">{{ tweet.content }}</p>
           </div>
         </div>
       {% endfor %}

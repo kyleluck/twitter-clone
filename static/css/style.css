@@ -29,3 +29,25 @@ nav.navbar{
 nav.navbar.shrink {
   min-height: 35px;
 }
+
+.avatar {
+  height: 50px;
+  width: 50px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.userinfo {
+  display: inline;
+  vertical-align: top;
+  margin-left: 6px;
+}
+
+.tweetcontent {
+  margin-left: 60px;
+}
+
+.bold {
+  font-weight: 700;
+  vertical-align: top;
+}
