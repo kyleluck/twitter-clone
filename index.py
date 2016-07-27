@@ -99,7 +99,9 @@ def profile():
             from
                 tweet
             where
-                user_id = $1''', user_id).namedresult()
+                user_id = $1
+            order by
+                time_display desc''', user_id).namedresult()
 
         # get number of tweets for this profile user
         num_tweets = db.query('select count(id) as num from tweet where user_id = $1', user_id).namedresult()
