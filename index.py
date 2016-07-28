@@ -252,8 +252,8 @@ def timeline():
         left outer join
             user_table on tweet.user_id = user_table.id
         where
-            tweet.id = tweet_id and (tweet.user_id = $1 or
-            tweet.user_id in (
+            tweet.id = tweet_id and (rt.user_id = $1 or
+            rt.user_id in (
                 select user_id from follower where followed_by = $1
             ))
         order by created_at desc
