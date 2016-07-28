@@ -131,7 +131,7 @@ def profile(username):
                     else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                     end) as time_display,
                 (case when exists
-                    (select * from likes where tweet_id = tweet.id and user_id = $1)
+                    (select * from likes where tweet_id = tweet.id and user_id = $2)
                     then true else false end) as liked,
                 user_table.username,
                 user_table.userfull,
@@ -155,7 +155,7 @@ def profile(username):
                     then to_char(tweet.created_at, 'Month DD')
                     else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                     end) as time_display,
-                (case when exists (select * from likes where tweet_id = tweet.id and user_id = $1) then true else false end) as tweet_liked,
+                (case when exists (select * from likes where tweet_id = tweet.id and user_id = $2) then true else false end) as liked,
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
@@ -169,7 +169,7 @@ def profile(username):
             where
                 tweet.id = tweet_id and rt.user_id = $1
             order by created_at desc
-            ''', user_id).namedresult()
+            ''', user_id, session['id']).namedresult()
 
         # get number of tweets for this profile user
         num_tweets = db.query('select count(id) as num from tweet where user_id = $1', user_id).namedresult()
