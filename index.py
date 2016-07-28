@@ -284,6 +284,14 @@ def follow(userid):
 
     return redirect(request.referrer)
 
+@app.route('/unfollow/<userid>')
+def unfollow(userid):
+    current_user_id = session['id']
+
+    # delete follow record from the database
+    db.query("delete from follower where user_id = $1 and followed_by = $2", userid, current_user_id)
+    return redirect(request.referrer)
+
 @app.route('/tweet', methods=['POST'])
 def tweet():
     tweet = request.form['tweet']

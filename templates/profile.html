@@ -49,7 +49,11 @@
         <div class="col col-xs-12">
           <!-- disable follow button if user is already following this user / hide if user is the profile user -->
           {% if session['user'] != user_info.username %}
-          <a href="/follow/{{ user_info.id }}" class="btn btn-primary follow-button" {% if user_is_following %}disabled="true"{% endif %}>Follow @{{ user_info.username }}</a>
+            {% if user_is_following %}
+            <a href="/unfollow/{{ user_info.id }}" class="btn btn-primary follow-button">Unfollow @{{ user_info.username }}</a>
+            {% else %}
+            <a href="/follow/{{ user_info.id }}" class="btn btn-primary follow-button">Follow @{{ user_info.username }}</a>
+            {% endif %}
           {% endif %}
         </div>
       </div>
