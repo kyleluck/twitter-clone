@@ -73,7 +73,7 @@
           <!-- Button trigger modal -->
           <!-- don't show retweet icon if user is profile user -->
           {% if session['user'] != tweet.username and session['user'] != tweet.username|lower %}
-          <span class="glyphicon glyphicon-retweet action" data-toggle="modal" data-target="#{{ tweet.id }}"></span>
+          <span class="glyphicon glyphicon-retweet action" data-toggle="modal" data-target="#{{ tweet.id }}"><span style="margin-left:5px;">{{ tweet.num_retweets }}</span></span>
           {% endif %}
         </div>
       </div>
