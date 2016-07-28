@@ -318,23 +318,22 @@ def retweet():
 
 
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    return render_template('signup.html', title = "Register")
+    if request.method == 'GET':
+        return render_template('signup.html', title = "Register")
+    else:
+        username = request.form['username']
+        password = request.form['password']
+        userfull = request.form['userfull']
+        bio = request.form['bio']
+        website = request.form['website']
+        hashed_password = generate_password_hash(password)
 
-@app.route('/processsignup', methods=['POST'])
-def process_signup():
-    username = request.form['username']
-    password = request.form['password']
-    userfull = request.form['userfull']
-    bio = request.form['bio']
-    website = request.form['website']
-    hashed_password = generate_password_hash(password)
+        # insert user into the database
+        db.insert('user_table', username=username, password=hashed_password, userfull=userfull, bio=bio, website=website)
 
-    # insert user into the database
-    db.insert('user_table', username=username, password=hashed_password, userfull=userfull, bio=bio, website=website)
-
-    return redirect('/login')
+        return redirect('/login')
 
 @app.route('/logout')
 def logout():
