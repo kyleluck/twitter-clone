@@ -15,24 +15,48 @@ def show_public():
                 tweet.id,
                 tweet.content,
                 tweet.image,
-                tweet.category,
+                tweet.user_id,
                 tweet.created_at,
-                user_table.username,
-                user_table.userfull,
-                user_table.avatar,
                 (case when (now() - tweet.created_at > '59 minutes'::interval)
                 	then to_char(tweet.created_at, 'Month DD')
                 	else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                 	end) as time_display,
                 (case when exists
                     (select * from likes where tweet_id = tweet.id)
-                    then true else false end) as liked
+                    then true else false end) as liked,
+                user_table.username,
+                user_table.userfull,
+                user_table.avatar,
+                False as retweet
             from
                 tweet
             inner join
                 user_table on tweet.user_id = user_table.id
-            order by
-                tweet.created_at desc''').namedresult()
+            union all
+            select
+                tweet.id,
+                tweet.content,
+                tweet.image,
+                tweet.user_id,
+                rt.created_at,
+                (case when (now() - tweet.created_at > '59 minutes'::interval)
+                    then to_char(tweet.created_at, 'Month DD')
+                    else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
+                    end) as time_display,
+                (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as liked,
+                user_table.username,
+                user_table.userfull,
+                user_table.avatar,
+                True as retweet
+            from
+                tweet
+            left outer join retweet AS rt ON rt.tweet_id = tweet.id
+            left outer join
+                user_table on tweet.user_id = user_table.id
+            where
+                tweet.id = tweet_id
+            order by created_at desc
+            ''').namedresult()
         return render_template('public.html',
             title = "What's Happening",
             tweets = tweets)
