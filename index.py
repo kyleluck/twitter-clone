@@ -275,16 +275,14 @@ def timeline():
         title = "Your Timeline",
         tweets = tweets_retweets)
 
-@app.route('/follow', methods=['GET'])
-def follow():
-    user_to_follow = request.args.get('userid')
-    current_profile = request.args.get('current_profile')
+@app.route('/follow/<userid>')
+def follow(userid):
     current_user_id = session['id']
 
     # insert into follower table
-    db.insert('follower', user_id=user_to_follow, followed_by=current_user_id)
+    db.insert('follower', user_id=userid, followed_by=current_user_id)
 
-    return redirect('/profile/%s' % current_profile)
+    return redirect(request.referrer)
 
 @app.route('/tweet', methods=['POST'])
 def tweet():
