@@ -298,7 +298,7 @@ def login():
         password = request.form['password']
 
         # find user by username
-        user = db.query("select id, username, password from user_table where username = $1", username)
+        user = db.query("select id, username, password from user_table where username ilike $1", username)
         if len(user.namedresult()) >= 1:
             # check that password matches. if so, redirect to home page otherwise redirect to login
             check_password = check_password_hash(user.namedresult()[0].password, password)
@@ -335,9 +335,10 @@ def signup():
         bio = request.form['bio']
         website = request.form['website']
         hashed_password = generate_password_hash(password)
+        avatar = request.form['avatar']
 
         # insert user into the database
-        db.insert('user_table', username=username, password=hashed_password, userfull=userfull, bio=bio, website=website)
+        db.insert('user_table', username=username, password=hashed_password, userfull=userfull, bio=bio, website=website, avatar=avatar)
 
         return redirect('/login')
 
