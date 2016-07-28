@@ -4,6 +4,7 @@
 <div class="container">
   <div class="row">
     <div class="col col-xs-12 col-sm-8 col-sm-offset-2">
+
       <!-- First, an area to tweet -->
       <div class="tweetthis">
         <div class="well">
@@ -16,8 +17,41 @@
           </form>
         </div>
       </div>
+
       {% for tweet in tweets %}
+      <!-- Modal -->
+      <form action="/retweet" method="POST">
+        <div class="modal fade" id="{{ tweet.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Retweet @{{ tweet. username }}</h4>
+              </div>
+              <div class="modal-body">
+                <div class="well">
+                  @{{ tweet.username }}
+                  {{ tweet.content }}
+                  {% if tweet.image %}
+                  <img src="{{ tweet.image }}" class="tweetpic" alt="tweetpic"/>
+                  {% endif %}
+                </div>
+                <input type="hidden" name="tweet_id" value="{{ tweet.id }}">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Retweet</button>
+              </div>
+            </div>
+          </div>
+        </div> <!-- end modal -->
+      </form>
+
+
       <div class="well">
+        {% if tweet.retweet %}
+        <p class="retweet"><span class="glyphicon glyphicon-retweet retweet"></span><span class="greyed"> @{{ session['user'] }} retweeted</span></p>
+        {% endif %}
         <div class="avatar">
           <img alt="@{{ tweet.username }}" class="avatar" src="{{ tweet.avatar }}">
         </div>
@@ -36,12 +70,14 @@
         </div>
         <div class="actions">
           <a href="/like/{{ tweet.id }}"><span class="glyphicon glyphicon-heart action {% if tweet.liked %} liked {% endif %}" aria-hidden="true"></span></a>
-          <a href="/retweet/{{ tweet.id }}"><span class="glyphicon glyphicon-retweet action" aria-hidden="true"></span></a>
+          <!-- Button trigger modal -->
+          <!-- <a href="/retweet/{{ tweet.id }}"><span class="glyphicon glyphicon-retweet action" aria-hidden="true"></span></a> -->
+          <span class="glyphicon glyphicon-retweet action" data-toggle="modal" data-target="#{{ tweet.id }}"></span>
         </div>
       </div>
       {% endfor %}
     </div>
-  </div>
-</div>
+  </div> <!-- end row -->
+</div> <!-- end container -->
 
 {% endblock %}

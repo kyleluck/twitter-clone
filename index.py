@@ -154,7 +154,10 @@ def timeline():
                 end) as time_display,
             (case when exists
                 (select * from likes where tweet_id = tweet.id)
-                then true else false end) as liked
+                then true else false end) as liked,
+            (case when exists
+                (select tweet_id from retweet where tweet_id = tweet.id)
+                then true else false end) as retweet
         from
             tweet
         full outer join
@@ -225,6 +228,17 @@ def process_login():
     return render_template('login.html',
         errormessage = True,
         title = "Login")
+
+@app.route('/retweet', methods=["POST"])
+def retweet():
+    user_id = session['id']
+    tweet_id = request.form['tweet_id']
+
+    db.insert('retweet', user_id=user_id, tweet_id=tweet_id)
+
+    # redirect to the referrer
+    return redirect(request.referrer);
+
 
 
 @app.route('/signup')
