@@ -50,7 +50,7 @@
 
       <div class="well">
         {% if tweet.retweet %}
-        <p class="retweet"><span class="glyphicon glyphicon-retweet retweet"></span><span class="greyed"> @{{ session['user'] }} retweeted</span></p>
+        <p class="retweet"><span class="glyphicon glyphicon-retweet retweet"></span><span class="greyed"> @{{ tweet.retweet_username }} retweeted</span></p>
         {% endif %}
         <div class="avatar">
           <img alt="@{{ tweet.username }}" class="avatar" src="{{ tweet.avatar }}">

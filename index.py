@@ -27,7 +27,8 @@ def show_public():
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
-                False as retweet
+                False as retweet,
+                'None' as retweet_username
             from
                 tweet
             inner join
@@ -47,7 +48,8 @@ def show_public():
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
-                True as retweet
+                True as retweet,
+                (select username from user_table where id = rt.user_id) as retweet_username
             from
                 tweet
             left outer join retweet AS rt ON rt.tweet_id = tweet.id
@@ -133,7 +135,8 @@ def profile(username):
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
-                False as retweet
+                False as retweet,
+                'None' as retweet_username
             from
                 tweet
             left outer join
@@ -155,7 +158,8 @@ def profile(username):
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
-                True as retweet
+                True as retweet,
+                (select username from user_table where id = rt.user_id) as retweet_username
             from
                 tweet
             left outer join retweet AS rt ON rt.tweet_id = tweet.id
@@ -210,7 +214,8 @@ def timeline():
             user_table.username,
             user_table.userfull,
             user_table.avatar,
-            False as retweet
+            False as retweet,
+            'None' as retweet_username
         from
             tweet
         left outer join
@@ -237,7 +242,8 @@ def timeline():
             user_table.username,
             user_table.userfull,
             user_table.avatar,
-            True as retweet
+            True as retweet,
+            (select username from user_table where id = rt.user_id) as retweet_username
         from
             tweet
         left outer join retweet AS rt ON rt.tweet_id = tweet.id
