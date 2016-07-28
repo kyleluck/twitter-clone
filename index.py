@@ -9,6 +9,7 @@ app = Flask('twitter-app')
 @app.route('/')
 def show_public():
     #print "generated password is %r" % generate_password_hash('test3456')
+    print "id is: %r" % session['id']
     if 'user' in session:
         tweets = db.query('''
             select
@@ -22,7 +23,7 @@ def show_public():
                 	else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                 	end) as time_display,
                 (case when exists
-                    (select * from likes where tweet_id = tweet.id)
+                    (select * from likes where tweet_id = tweet.id and user_id = $1)
                     then true else false end) as liked,
                 user_table.username,
                 user_table.userfull,
@@ -44,7 +45,7 @@ def show_public():
                     then to_char(tweet.created_at, 'Month DD')
                     else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                     end) as time_display,
-                (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as liked,
+                (case when exists (select * from likes where tweet_id = tweet.id and user_id = $1) then true else false end) as liked,
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
@@ -58,7 +59,7 @@ def show_public():
             where
                 tweet.id = tweet_id
             order by created_at desc
-            ''').namedresult()
+            ''', session['id']).namedresult()
         return render_template('public.html',
             title = "What's Happening",
             tweets = tweets)
@@ -112,10 +113,10 @@ def profile(username):
         		from
         		  follower
         		where
-        		  user_id = $2
+        		  user_id = $1
         		group by
         		  follower.user_id) as followers_query on user_id = followed_by;
-                ''', user_id, user_id).namedresult()
+                ''', user_id).namedresult()
 
         # get current tweets for this profile user
         user_tweets = db.query('''
@@ -130,7 +131,7 @@ def profile(username):
                     else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                     end) as time_display,
                 (case when exists
-                    (select * from likes where tweet_id = tweet.id)
+                    (select * from likes where tweet_id = tweet.id and user_id = $1)
                     then true else false end) as liked,
                 user_table.username,
                 user_table.userfull,
@@ -154,7 +155,7 @@ def profile(username):
                     then to_char(tweet.created_at, 'Month DD')
                     else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                     end) as time_display,
-                (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as tweet_liked,
+                (case when exists (select * from likes where tweet_id = tweet.id and user_id = $1) then true else false end) as tweet_liked,
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
@@ -199,6 +200,7 @@ def profile(username):
 @app.route('/timeline')
 def timeline():
     user_id = session['id']
+    print "session id is: %r" % user_id
     tweets_retweets = db.query('''
         select
             tweet.id,
@@ -210,7 +212,7 @@ def timeline():
                 then to_char(tweet.created_at, 'Month DD')
                 else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                 end) as time_display,
-            (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as liked,
+            (case when exists (select * from likes where tweet_id = tweet.id and user_id = $1) then true else false end) as liked,
             user_table.username,
             user_table.userfull,
             user_table.avatar,
@@ -238,7 +240,7 @@ def timeline():
                 then to_char(tweet.created_at, 'Month DD')
                 else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                 end) as time_display,
-            (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as liked,
+            (case when exists (select * from likes where tweet_id = tweet.id and user_id = $1) then true else false end) as liked,
             user_table.username,
             user_table.userfull,
             user_table.avatar,
@@ -250,7 +252,10 @@ def timeline():
         left outer join
             user_table on tweet.user_id = user_table.id
         where
-            tweet.id = tweet_id
+            tweet.id = tweet_id and (tweet.user_id = $1 or
+            tweet.user_id in (
+                select user_id from follower where followed_by = $1
+            ))
         order by created_at desc
     ''', user_id).namedresult()
 
