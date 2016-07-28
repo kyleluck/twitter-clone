@@ -138,41 +138,62 @@ def profile(username):
 @app.route('/timeline')
 def timeline():
     user_id = session['id']
-    timeline_query = db.query('''
+    tweets_retweets = db.query('''
         select
             tweet.id,
             tweet.content,
             tweet.image,
             tweet.category,
             tweet.created_at,
-            user_table.username,
-            user_table.userfull,
-            user_table.avatar,
             (case when (now() - tweet.created_at > '59 minutes'::interval)
                 then to_char(tweet.created_at, 'Month DD')
                 else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                 end) as time_display,
-            (case when exists
-                (select * from likes where tweet_id = tweet.id)
-                then true else false end) as liked,
-            (case when exists
-                (select tweet_id from retweet where tweet_id = tweet.id)
-                then true else false end) as retweet
+            (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as tweet_liked,
+            user_table.username,
+            user_table.userfull,
+            user_table.avatar,
+            False as retweet
         from
             tweet
-        full outer join
+        left outer join
+        	retweet on tweet.id = retweet.tweet_id
+        left outer join
             user_table on tweet.user_id = user_table.id
         where
             tweet.user_id = $1 or
             tweet.user_id in (
                 select user_id from follower where followed_by = $1
             )
-        order by
-            time_display asc
-        ''', user_id).namedresult()
+        union all
+        select
+            tweet.id,
+            tweet.content,
+            tweet.image,
+            tweet.category,
+            rt.created_at,
+            (case when (now() - tweet.created_at > '59 minutes'::interval)
+                then to_char(tweet.created_at, 'Month DD')
+                else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
+                end) as time_display,
+            (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as tweet_liked,
+            user_table.username,
+            user_table.userfull,
+            user_table.avatar,
+            True as retweet
+        from
+            tweet
+        left outer join retweet AS rt ON rt.tweet_id = tweet.id
+        left outer join
+            user_table on tweet.user_id = user_table.id
+        where
+            tweet.id = tweet_id
+        order by created_at desc
+    ''', user_id).namedresult()
+
     return render_template('timeline.html',
         title = "Your Timeline",
-        tweets = timeline_query)
+        tweets = tweets_retweets)
 
 @app.route('/follow', methods=['GET'])
 def follow():
