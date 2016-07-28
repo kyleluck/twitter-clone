@@ -162,7 +162,7 @@ def profile(username):
             left outer join
                 user_table on tweet.user_id = user_table.id
             where
-                tweet.id = tweet_id
+                tweet.id = tweet_id and rt.user_id = $1
             order by created_at desc
             ''', user_id).namedresult()
 
