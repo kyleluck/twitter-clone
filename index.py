@@ -94,20 +94,53 @@ def profile(username):
         # get current tweets for this profile user
         user_tweets = db.query('''
             select
-                *,
+                tweet.id,
+                tweet.content,
+                tweet.image,
+                tweet.user_id,
+                tweet.created_at,
                 (case when (now() - tweet.created_at > '59 minutes'::interval)
                     then to_char(tweet.created_at, 'Month DD')
                     else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                     end) as time_display,
                 (case when exists
                     (select * from likes where tweet_id = tweet.id)
-                    then true else false end) as liked
+                    then true else false end) as liked,
+                user_table.username,
+                user_table.userfull,
+                user_table.avatar,
+                False as retweet
             from
                 tweet
+            left outer join
+                user_table on tweet.user_id = user_table.id
             where
                 user_id = $1
-            order by
-                time_display desc''', user_id).namedresult()
+            union all
+            select
+                tweet.id,
+                tweet.content,
+                tweet.image,
+                tweet.user_id,
+                rt.created_at,
+                (case when (now() - tweet.created_at > '59 minutes'::interval)
+                    then to_char(tweet.created_at, 'Month DD')
+                    else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
+                    end) as time_display,
+                (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as tweet_liked,
+                user_table.username,
+                user_table.userfull,
+                user_table.avatar,
+                True as retweet
+            from
+                tweet
+            left outer join retweet AS rt ON rt.tweet_id = tweet.id
+            left outer join
+                user_table on tweet.user_id = user_table.id
+            where
+                tweet.id = tweet_id
+            order by created_at desc
+            ''', user_id).namedresult()
 
         # get number of tweets for this profile user
         num_tweets = db.query('select count(id) as num from tweet where user_id = $1', user_id).namedresult()
