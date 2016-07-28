@@ -336,7 +336,7 @@ def signup():
     else:
         username = request.form['username']
         password = request.form['password']
-        userfull = request.form['userfull']
+        userfull = request.form['userfull'].lower()
         bio = request.form['bio']
         website = request.form['website']
         hashed_password = generate_password_hash(password)
