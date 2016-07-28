@@ -105,10 +105,10 @@
           {% endif %}
         </div>
         <div class="actions">
-          <a href="/like/{{ tweet.id }}"><span class="glyphicon glyphicon-heart action {% if tweet.liked %} liked {% endif %}" aria-hidden="true"></span></a>
+          <a href="/like/{{ tweet.id }}"><span class="glyphicon glyphicon-heart action {% if tweet.liked %} liked {% endif %}" aria-hidden="true">{{ tweet.num_likes }}</span></a>
           <!-- Button trigger modal -->
           <!-- don't show retweet icon if user is profile user -->
-          {% if session['user'] != tweet.username %}
+          {% if session['user'] != tweet.username  and not tweet.retweet %}
           <span class="glyphicon glyphicon-retweet action" data-toggle="modal" data-target="#{{ tweet.id }}"></span>
           {% endif %}
         </div>

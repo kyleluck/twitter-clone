@@ -25,6 +25,7 @@ def show_public():
                 (case when exists
                     (select * from likes where tweet_id = tweet.id and user_id = $1)
                     then true else false end) as liked,
+                (select count(tweet_id) from likes where tweet_id = tweet.id) as num_likes,
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
@@ -46,6 +47,7 @@ def show_public():
                     else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                     end) as time_display,
                 (case when exists (select * from likes where tweet_id = tweet.id and user_id = $1) then true else false end) as liked,
+                (select count(tweet_id) from likes where tweet_id = tweet.id) as num_likes,
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
@@ -133,6 +135,7 @@ def profile(username):
                 (case when exists
                     (select * from likes where tweet_id = tweet.id and user_id = $2)
                     then true else false end) as liked,
+                (select count(tweet_id) from likes where tweet_id = tweet.id) as num_likes,
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
@@ -156,6 +159,7 @@ def profile(username):
                     else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                     end) as time_display,
                 (case when exists (select * from likes where tweet_id = tweet.id and user_id = $2) then true else false end) as liked,
+                (select count(tweet_id) from likes where tweet_id = tweet.id) as num_likes,
                 user_table.username,
                 user_table.userfull,
                 user_table.avatar,
@@ -213,6 +217,7 @@ def timeline():
                 else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                 end) as time_display,
             (case when exists (select * from likes where tweet_id = tweet.id and user_id = $1) then true else false end) as liked,
+            (select count(tweet_id) from likes where tweet_id = tweet.id) as num_likes,
             user_table.username,
             user_table.userfull,
             user_table.avatar,
@@ -241,6 +246,7 @@ def timeline():
                 else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                 end) as time_display,
             (case when exists (select * from likes where tweet_id = tweet.id and user_id = $1) then true else false end) as liked,
+            (select count(tweet_id) from likes where tweet_id = tweet.id) as num_likes,
             user_table.username,
             user_table.userfull,
             user_table.avatar,

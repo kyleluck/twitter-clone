@@ -53,7 +53,7 @@
           {% endif %}
         </div>
         <div class="actions">
-          <a href="/like/{{ tweet.id }}"><span class="glyphicon glyphicon-heart action {% if tweet.liked %} liked {% endif %}" aria-hidden="true"></span></a>
+          <a href="/like/{{ tweet.id }}"><span class="glyphicon glyphicon-heart action {% if tweet.liked %} liked {% endif %}" aria-hidden="true">{{tweet.num_likes}}</span></a>
           {% if session['user'] != tweet.username %}
           <span class="glyphicon glyphicon-retweet action" data-toggle="modal" data-target="#{{ tweet.id }}"></span>
           {% endif %}
