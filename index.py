@@ -283,29 +283,28 @@ def like(tweet_id):
     return redirect(request.referrer);
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html', title = "Login")
+    if request.method == 'GET':
+        return render_template('login.html', title = "Login")
+    else:
+        username = request.form['username']
+        password = request.form['password']
 
+        # find user by username
+        user = db.query("select id, username, password from user_table where username = $1", username)
+        if len(user.namedresult()) >= 1:
+            # check that password matches. if so, redirect to home page otherwise redirect to login
+            check_password = check_password_hash(user.namedresult()[0].password, password)
+            if check_password:
+                session['user'] = username
+                session['id'] = user.namedresult()[0].id
+                return redirect('/')
 
-@app.route('/processlogin', methods=['POST'])
-def process_login():
-    username = request.form['username']
-    password = request.form['password']
+        return render_template('login.html',
+            errormessage = True,
+            title = "Login")
 
-    # find user by username
-    user = db.query("select id, username, password from user_table where username = $1", username)
-    if len(user.namedresult()) >= 1:
-        # check that password matches. if so, redirect to home page otherwise redirect to login
-        check_password = check_password_hash(user.namedresult()[0].password, password)
-        if check_password:
-            session['user'] = username
-            session['id'] = user.namedresult()[0].id
-            return redirect('/')
-
-    return render_template('login.html',
-        errormessage = True,
-        title = "Login")
 
 @app.route('/retweet', methods=["POST"])
 def retweet():
