@@ -206,7 +206,7 @@ def timeline():
                 then to_char(tweet.created_at, 'Month DD')
                 else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                 end) as time_display,
-            (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as tweet_liked,
+            (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as liked,
             user_table.username,
             user_table.userfull,
             user_table.avatar,
@@ -233,7 +233,7 @@ def timeline():
                 then to_char(tweet.created_at, 'Month DD')
                 else concat(to_char(age(now(), tweet.created_at), 'MI'), ' mins ago')
                 end) as time_display,
-            (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as tweet_liked,
+            (case when exists (select * from likes where tweet_id = tweet.id) then true else false end) as liked,
             user_table.username,
             user_table.userfull,
             user_table.avatar,
