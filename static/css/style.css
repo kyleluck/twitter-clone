@@ -105,3 +105,8 @@ nav.navbar.shrink {
 .retweet {
   color: #50D9A3;
 }
+
+.logo {
+  max-width: 70px;
+  display: inline;
+}
